@@ -1,34 +1,30 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import { Link, useLocation } from 'react-router-dom'
 
-function AddZodiac(props) {
-	const [validForm, setValidForm] = useState(false)
-  const [formData, setFormData] = useState({
-		name: '',
-		breed: '',
-		age: 0
-	})
-
+function EditZodiac(props) {
+	const location = useLocation()
+  // console.log(location)
+	
+	const [formData, setFormData] = useState(location.state.zodiac)
+	const formElement = useRef()
+	const [validForm, setValidForm] = useState(true)
+	
 	const handleChange = evt => {
-		// console.log(evt)
 		setFormData({ ...formData, [evt.target.name]: evt.target.value })
 	}
-
-	const formElement = useRef()
 	
 	useEffect(() => {
 		formElement.current.checkValidity() ? setValidForm(true) : setValidForm(false)
 	}, [formData])
-
-	// console.log(formElement)
+	
 	const handleSubmit = evt => {
 		evt.preventDefault()
-		props.handleAddZodiac(formData)
+		props.handleUpdateZodiac(formData)
 	}
-	
 
 	return (
 		<>
-			<h1>Add Zodiac</h1>
+			<h1>Edit Zodiac</h1>
 			<form autoComplete="off" ref={formElement} onSubmit={handleSubmit}>
 				<div className="form-group mb-3">
 					<label htmlFor="name-input" className="form-label">
@@ -39,9 +35,9 @@ function AddZodiac(props) {
 						className="form-control"
 						id="name-input"
 						name="name"
-            value={formData.name}
+						value={formData.name}
+						onChange={handleChange}
 						required
-            onChange={handleChange}
 					/>
 				</div>
 				<div className="form-group mb-3">
@@ -53,9 +49,9 @@ function AddZodiac(props) {
 						className="form-control"
 						id="breed-input"
 						name="breed"
-            value={formData.breed}
+						value={formData.breed}
+						onChange={handleChange}
 						required
-            onChange={handleChange}
 					/>
 				</div>
 				<div className="form-group mb-4">
@@ -67,22 +63,30 @@ function AddZodiac(props) {
 						className="form-control"
 						id="age-input"
 						name="age"
-            value={formData.age}
-            onChange={handleChange}
+						value={formData.age}
+						onChange={handleChange}
 					/>
 				</div>
-				<div className="d-grid">
+				<div className="d-grid mb-3">
 					<button
 						type="submit"
 						className="btn btn-primary btn-fluid"
 						disabled={!validForm}
 					>
-						Add Zodiac
+						Save Zodiac
 					</button>
+				</div>
+        <div className="d-grid">
+					<Link
+						to="/"
+						className="btn btn-danger btn-fluid"
+					>
+						Cancel
+					</Link>
 				</div>
 			</form>
 		</>
 	)
 }
 
-export default AddZodiac
+export default EditZodiac
